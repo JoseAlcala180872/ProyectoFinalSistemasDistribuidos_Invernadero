@@ -12,11 +12,22 @@ const sensores = [
 // Función para generar datos del sensor
 function generateSensorData(sensorId) {
     const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); 
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    //formato correcto para almacenarlo en mongo 
+    const fechaHora = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+   
     return {
-        idSensor: sensorId, 
+        idSensor: sensorId,
         humedad: (Math.random() * 100).toFixed(2),
         temperatura: (Math.random() * 50).toFixed(2),
-        fechaHora: now.toLocaleString('en-GB').replace(',', '') // Formato: DD/MM/YYYY HH:MM:SS
+        fechaHora: fechaHora 
     };
 }
 
@@ -29,8 +40,8 @@ sensores.forEach((sensor) => {
         // Enviar datos cada 5 segundos
         setInterval(() => {
             const sensorData = generateSensorData(sensor.id);
-            ws.send(JSON.stringify(sensorData)); 
-            console.log(`Datos enviados:`, JSON.stringify(sensorData)); 
+            ws.send(JSON.stringify(sensorData));
+            console.log(`Datos enviados:`, JSON.stringify(sensorData));
         }, 5000);
     });
 
