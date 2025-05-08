@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Invernadero - Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="asstets/css/dashboard-estilos.css">
+
+</head>
+<body>
+    <!-- Barra lateral -->
+    <nav class="sidebar">
+        <div class="sidebar-icon active" title="Dashboard">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="sidebar-icon" title="Sensores">
+            <i class="fas fa-plus"></i>
+        </div>
+        <div class="sidebar-icon" title="Notificaciones">
+            <i class="fas fa-bell"></i>
+        </div>
+        <div class="sidebar-icon" title="Estadísticas">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="sidebar-icon" title="Configuración">
+            <i class="fas fa-cog"></i>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <div class="navbar">
+            <h1>Control de invernadero</h1>
+            <div class="user-info">
+                <div class="weather-info">
+                    <i class="fas fa-cloud-sun weather-icon"></i>
+                    <span>Exterior: 18°C</span>
+                </div>
+                <div class="user-avatar">AG</div>
+            </div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-temperature-high"></i></div>
+                <div class="stat-title">Temperatura actual</div>
+                <div class="stat-value">9°</div>
+                <div class="stat-time">9:00 AM</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-tint"></i></div>
+                <div class="stat-title">Humedad actual</div>
+                <div class="stat-value">10%</div>
+                <div class="stat-note">The dew point is 27° right now</div>
+            </div>
+        </div>
+        
+        <div class="history-card">
+            <div class="history-title">Datos históricos de temperatura</div>
+            <div class="history-subtitle">En la última temporada</div>
+            <div class="chart-container">
+                <div class="chart-grid">
+                    <div class="grid-line"></div>
+                    <div class="grid-line"></div>
+                    <div class="grid-line"></div>
+                </div>
+                <div class="data-graph"></div>
+            </div>
+        </div>
+        
+        <div class="hourly-charts">
+            <div class="hourly-chart">
+                <h2>Temperatura por hora</h2>
+                <div class="chart-hourly">
+                    <div class="hourly-grid">
+                        <div class="hourly-grid-line"></div>
+                        <div class="hourly-grid-line"></div>
+                        <div class="hourly-grid-line"></div>
+                    </div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                </div>
+                <div class="time-markers">
+                    <span class="time-marker">10AM</span>
+                    <span class="time-marker">11AM</span>
+                    <span class="time-marker">12AM</span>
+                    <span class="time-marker">01PM</span>
+                    <span class="time-marker">02PM</span>
+                    <span class="time-marker">03PM</span>
+                </div>
+            </div>
+            
+            <div class="hourly-chart">
+                <h2>Humedad por hora</h2>
+                <div class="chart-hourly">
+                    <div class="hourly-grid">
+                        <div class="hourly-grid-line"></div>
+                        <div class="hourly-grid-line"></div>
+                        <div class="hourly-grid-line"></div>
+                    </div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                    <div class="data-point"></div>
+                </div>
+                <div class="time-markers">
+                    <span class="time-marker">10AM</span>
+                    <span class="time-marker">11AM</span>
+                    <span class="time-marker">12AM</span>
+                    <span class="time-marker">01PM</span>
+                    <span class="time-marker">02PM</span>
+                    <span class="time-marker">03PM</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="greenhouse-sensors.html" class="nav-link">Ver Sensores</a>
+            <a href="greenhouse-alarms.html" class="nav-link">Ver Alarmas</a>
+            <a href="greenhouse-data.html" class="nav-link">Ver Datos</a>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de datos en tiempo real
+        function updateData() {
+            // Actualizar temperatura
+            const tempValue = document.querySelector('.stat-card:first-child .stat-value');
+            const currentTemp = parseInt(tempValue.textContent);
+            const newTemp = currentTemp + Math.floor(Math.random() * 3) - 1;
+            tempValue.textContent = newTemp + '°';
+            
+            // Actualizar hora
+            const timeElem = document.querySelector('.stat-time');
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            timeElem.textContent = `${hours}:${minutes}`;
+            
+            // Programar próxima actualización
+            setTimeout(updateData, 60000);
+        }
+        
+        // Iniciar actualización de datos
+        updateData();
+    </script>
+</body>
+</html>

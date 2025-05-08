@@ -1,0 +1,451 @@
+        :root {
+            --primary-color: #7b78ff;
+            --primary-light: #c5c6f1;
+            --primary-dark: #5652e5;
+            --secondary-color: #67a3db;
+            --text-color: #2d3748;
+            --bg-color: #f8fafc;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --accent-color: #ff7849;
+            --danger-color: #e53e3e;
+            --success-color: #38a169;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .sidebar {
+            width: 70px;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+        }
+
+        .sidebar-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .sidebar-icon.active {
+            background-color: white;
+            color: var(--primary-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .weather-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .weather-icon {
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .search-bar {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 40px;
+            border: none;
+            border-radius: 12px;
+            background-color: white;
+            font-size: 14px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+
+        .add-sensor-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+        }
+
+        .add-sensor-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .sensors-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 0.8fr 1fr 1fr 1fr 0.5fr;
+            padding: 20px;
+            background-color: var(--primary-light);
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .sensor-row {
+            display: grid;
+            grid-template-columns: 0.8fr 1fr 1fr 1fr 0.5fr;
+            padding: 15px 20px;
+            align-items: center;
+            border-bottom: 1px solid #edf2f7;
+            transition: var(--transition);
+        }
+
+        .sensor-row:last-child {
+            border-bottom: none;
+        }
+
+        .sensor-row:hover {
+            background-color: #f7fafc;
+        }
+
+        .sensor-name {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .sensor-id {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .sensor-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sensor-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: #ebf8ff;
+            color: var(--secondary-color);
+            font-size: 16px;
+        }
+
+        .sensor-icon.temp {
+            background-color: #feebc8;
+            color: #dd6b20;
+        }
+
+        .sensor-icon.humidity {
+            background-color: #e6fffa;
+            color: #38b2ac;
+        }
+
+        .sensor-icon.co2 {
+            background-color: #fbe4e4;
+            color: #e53e3e;
+        }
+
+        .sensor-icon.light {
+            background-color: #fefcbf;
+            color: #d69e2e;
+        }
+
+        .sensor-icon.soil {
+            background-color: #e9d8fd;
+            color: #805ad5;
+        }
+
+        .sensor-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+
+        .status-indicator.inactive {
+            background-color: #718096;
+        }
+
+        .status-indicator.warning {
+            background-color: #ecc94b;
+        }
+
+        .status-indicator.error {
+            background-color: var(--danger-color);
+        }
+
+        .sensor-value {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .value-unit {
+            color: #718096;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .sensor-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #edf2f7;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .action-btn.delete:hover {
+            background-color: #fbe4e4;
+            color: var(--danger-color);
+        }
+
+        .sensor-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .detail-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .detail-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .detail-content {
+            margin-bottom: 15px;
+        }
+
+        .detail-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: #edf2f7;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+            color: white;
+            background-color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .table-header, .sensor-row {
+                grid-template-columns: 1fr 1fr 0.5fr;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .sensors-table {
+                overflow-x: auto;
+            }
+        }
+    
