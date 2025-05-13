@@ -1,6 +1,65 @@
-<<<<<<< Updated upstream
+const WebSocket = require('ws');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
+const amqp = require('amqplib');
+
+const wss = new WebSocket.Server({ port: 4000 });
+
+wss.on('connection', (ws) => {
+    console.log('Conexión establecida con el gateway.');
+
+    ws.on('message', async (message) => {
+        try {
+            const sensorData = JSON.parse(message);
+            console.log('Datos recibidos del gateway:', sensorData);
+
+            // Guardar los datos en la base de datos
+            await DatoDAO.crearDato(sensorData).then(datoGuardado => {
+                console.log('Dato guardado en la base de datos:', datoGuardado);
+            }).catch(error => {
+                console.error('Error al guardar el dato:', error);
+            });
+        } catch (error) {
+            console.error('Error al procesar los datos recibidos:', error.message);
+        }
+    });
+
+    ws.on('close', () => {
+        console.log('Conexión cerrada con el gateway.');
+    });
+});
+
+wss.on('listening', () => {
+    console.log('Servidor escuchando en el puerto 4000.');
+});
+
+wss.on('error', (err) => {
+    console.error('Error del servidor WebSocket:', err.message);
+});
+
+async function consumirRabbitMQ() {
+    const conexion = await amqp.connect('amqp://localhost');
+    const canal = await conexion.createChannel();
+    await canal.assertQueue('datos_sensores');
+    canal.consume('datos_sensores', async (msg) => {
+        if (msg !== null) {
+            try {
+                const sensorData = JSON.parse(msg.content.toString());
+                // Guardar los datos en la base de datos
+                await DatoDAO.crearDato(sensorData).then(datoGuardado => {
+                    console.log('Dato guardado en la base de datos:', datoGuardado);
+                }).catch(error => {
+                    console.error('Error al guardar el dato:', error);
+                });
+                canal.ack(msg);
+            } catch (error) {
+                console.error('Error al procesar los datos recibidos:', error.message);
+                canal.nack(msg, false, false); // descarta el mensaje si hay error
+            }
+        }
+    });
+    console.log('Servidor consumiendo mensajes de RabbitMQ');
+}
 
 async function main() {
     //Conexion establecida.
@@ -9,63 +68,8 @@ async function main() {
     }).catch(error => {
         console.error('Error al conectar a la base de datos:', error);
     });
-    //Insertar un nuevo dato.
-    await DatoDAO.crearDato({ humedad: 25, temperatura: 20, fechaHora:  new Date()}).then(datoGuardado => {
-        console.log('Producto creado exitosamente:', datoGuardado);
-    }).catch(error => {
-        console.error('Error al crear el producto:', error);
-    });
 
-    //Desconexión de la base de datos.
-    db.desconectar().then(() => {
-        console.log('Desconexión exitosa');
-    }).catch(error => {
-        console.error('Error al desconectar a la base de datos:', error);
-    });;
-=======
-const amqp = require('amqplib');
-const db = require('./config/db');
-const DatoDAO = require('./dataAccess/DatoDAO');
-
-const queue = 'datos_sensores';
-
-async function consumirCola() {
-    const conn = await amqp.connect('amqp://localhost');
-    const channel = await conn.createChannel();
-    await channel.assertQueue(queue, { durable: true });
-
-    channel.consume(queue, async (msg) => {
-        if (msg !== null) {
-            try {
-                const sensorData = JSON.parse(msg.content.toString());
-                console.log('Datos recibidos de RabbitMQ:', sensorData);
-
-                // Guardar los datos en la base de datos
-                await DatoDAO.crearDato(sensorData)
-                    .then(datoGuardado => {
-                        console.log('Dato guardado en la base de datos:', datoGuardado);
-                    })
-                    .catch(error => {
-                        console.error('Error al guardar el dato:', error);
-                    });
-            } catch (error) {
-                console.error('Error al procesar los datos recibidos:', error.message);
-            }
-            channel.ack(msg);
-        }
-    });
-}
-
-async function main() {
-    await db.conectar()
-        .then(() => {
-            console.log('Conexión establecida con éxito');
-            consumirCola();
-        })
-        .catch(error => {
-            console.error('Error al conectar a la base de datos:', error);
-        });
->>>>>>> Stashed changes
+    consumirRabbitMQ();
 }
 
 main();

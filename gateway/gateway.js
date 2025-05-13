@@ -1,9 +1,4 @@
 const WebSocket = require('ws');
-<<<<<<< Updated upstream
-
-const wss = new WebSocket.Server({ port: 3000 });
-
-=======
 const crypto = require('crypto');
 const amqp = require('amqplib');
 
@@ -16,28 +11,25 @@ console.log('Clave privada:', clavePrivada.export({ type: 'pkcs1', format: 'pem'
 
 const wss = new WebSocket.Server({ port: 3000 });
 
-let channel;
-const queue = 'datos_sensores';
+let canalRabbitMQ;
 
-// Conexión a RabbitMQ
-amqp.connect('amqp://localhost')
-    .then(conn => conn.createChannel())
-    .then(ch => {
-        channel = ch;
-        return channel.assertQueue(queue, { durable: true });
-    })
-    .catch(console.error);
+async function conectarRabbitMQ() {
+    const conexion = await amqp.connect('amqp://localhost');
+    canalRabbitMQ = await conexion.createChannel();
+    await canalRabbitMQ.assertQueue('datos_sensores');
+    console.log('Conectado a RabbitMQ');
+}
 
->>>>>>> Stashed changes
+conectarRabbitMQ();
+
 wss.on('connection', (ws) => {
     console.log('Módulo conectado.');
 
-    ws.on('message', (message) => {
+    //esta es la que envia la clave publica para el sensor
+    ws.send(JSON.stringify({ type: 'clavePublica', clavePublica: clavePublica.export({ type: 'pkcs1', format: 'pem' }) }));
+
+    ws.on('message', async (message) => {
         try {
-<<<<<<< Updated upstream
-            const receivedData = JSON.parse(message);
-            console.log('Datos recibidos:', JSON.stringify(receivedData));
-=======
             const datosRecibidos = JSON.parse(message);
 
             if (datosRecibidos.type === 'encryptedData') {
@@ -49,14 +41,13 @@ wss.on('connection', (ws) => {
                     Buffer.from(datosRecibidos.data, 'base64')
                 );
                 console.log('Datos recibidos:', datosDescifrados.toString());
-                if (channel) {
-                    channel.sendToQueue(queue, Buffer.from(datosDescifrados.toString()), { persistent: true });
-                    console.log("Datos enviados a la cola RabbitMQ correctamente");
+                if (canalRabbitMQ) {
+                    canalRabbitMQ.sendToQueue('datos_sensores', Buffer.from(datosDescifrados.toString()));
+                    console.log('Datos publicados en RabbitMQ');
                 } else {
-                    console.error('No se pudo enviar los datos: canal de RabbitMQ no disponible.');
+                    console.error('No se pudo publicar en RabbitMQ: canal no disponible.');
                 }
             }
->>>>>>> Stashed changes
         } catch (error) {
             console.error('Error al procesar los datos:', error.message);
         }
