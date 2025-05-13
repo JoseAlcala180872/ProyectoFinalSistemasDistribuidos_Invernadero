@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const crypto = require('crypto');
+const amqp = require('amqplib');
 
 const { publicKey: clavePublica, privateKey: clavePrivada } = crypto.generateKeyPairSync('rsa', {
     modulusLength: 2048,
@@ -10,15 +11,16 @@ console.log('Clave privada:', clavePrivada.export({ type: 'pkcs1', format: 'pem'
 
 const wss = new WebSocket.Server({ port: 3000 });
 
-const serverSocket = new WebSocket('ws://127.0.0.1:4000');
+let canalRabbitMQ;
 
-serverSocket.on('open', () => {
-    console.log('Conectado al servidor principal.');
-});
+async function conectarRabbitMQ() {
+    const conexion = await amqp.connect('amqp://localhost');
+    canalRabbitMQ = await conexion.createChannel();
+    await canalRabbitMQ.assertQueue('datos_sensores');
+    console.log('Conectado a RabbitMQ');
+}
 
-serverSocket.on('error', (err) => {
-    console.error('Error en la conexión con el servidor:', err.message);
-});
+conectarRabbitMQ();
 
 wss.on('connection', (ws) => {
     console.log('Módulo conectado.');
@@ -26,7 +28,7 @@ wss.on('connection', (ws) => {
     //esta es la que envia la clave publica para el sensor
     ws.send(JSON.stringify({ type: 'clavePublica', clavePublica: clavePublica.export({ type: 'pkcs1', format: 'pem' }) }));
 
-    ws.on('message', (message) => {
+    ws.on('message', async (message) => {
         try {
             const datosRecibidos = JSON.parse(message);
 
@@ -39,11 +41,11 @@ wss.on('connection', (ws) => {
                     Buffer.from(datosRecibidos.data, 'base64')
                 );
                 console.log('Datos recibidos:', datosDescifrados.toString());
-                if (serverSocket.readyState === WebSocket.OPEN) {
-                    serverSocket.send(datosDescifrados.toString());
-                    console.log("Datos reenviados al servidor correctamente");
+                if (canalRabbitMQ) {
+                    canalRabbitMQ.sendToQueue('datos_sensores', Buffer.from(datosDescifrados.toString()));
+                    console.log('Datos publicados en RabbitMQ');
                 } else {
-                    console.error('No se pudo reenviar los datos: conexión con el servidor no está abierta.');
+                    console.error('No se pudo publicar en RabbitMQ: canal no disponible.');
                 }
             }
         } catch (error) {
