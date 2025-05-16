@@ -12,6 +12,14 @@ class DatoDAO {
         throw error;
       }
     }
+
+    async obtenerDatos() {
+        try {
+            return await Dato.find().limit(20); 
+        } catch (error) {
+            throw error;
+        }
+    }
    /*
     async obtenerProductoPorId(id) {
       try {

@@ -2,6 +2,23 @@ const WebSocket = require('ws');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
 const amqp = require('amqplib');
+//utilizado para la prueba de postman
+const express = require('express');
+const sensorRoutes = require('./routes/sensorRoute');
+const datoRoute = require('./routes/datoRoute');
+
+const app = express();
+app.use(express.json());
+
+//Ruta para consultar sensores en Postman
+app.use('/sensores', sensorRoutes);
+app.use('/datos', datoRoute);
+
+const PORT_HTTP = 3100;
+app.listen(PORT_HTTP, () => {
+    console.log(`Servidor HTTP corriendo en puerto ${PORT_HTTP}`);
+});
+//fin  prueba postman
 
 const wss = new WebSocket.Server({ port: 4000 });
 
@@ -38,7 +55,9 @@ wss.on('error', (err) => {
 });
 
 async function consumirRabbitMQ() {
-    const conexion = await amqp.connect('amqp://localhost');
+    //aqui va la contraseña y el usuario para rabbitmq
+    // ejemplo: amqp://usuario:contraseña@localhost'
+    const conexion = await amqp.connect('amqp://admin:proyectos21@localhost');
     const canal = await conexion.createChannel();
     await canal.assertQueue('datos_sensores');
     canal.consume('datos_sensores', async (msg) => {
