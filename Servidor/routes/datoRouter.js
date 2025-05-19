@@ -11,5 +11,5 @@ router.post('/match', verifyToken, categoriaController.crearCategoriaMatch);
 router.put('/:id', verifyToken, categoriaController.actualizarCategoria);
 router.delete('/:id', verifyToken, categoriaController.eliminarCategoria);
 */
-router.post('/', verifyToken, datoController.crearDato);
+router.post('/', datoController.crearDato);
 module.exports = router;

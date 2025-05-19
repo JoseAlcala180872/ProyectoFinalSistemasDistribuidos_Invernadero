@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
+//const UsuarioDAO = require('./dataAccess/UsuarioDAO');
 const amqp = require('amqplib');
 const express = require('express');
 const app = express();
@@ -87,6 +88,15 @@ async function main() {
     });
 
     consumirRabbitMQ();
+    /*UsuarioDAO.crearUsuario({
+  "nombre": "Juan",
+  "correo": "juan@ejemplo.com",
+  "clave": "123456"
+    }).then(usuarioGuardado => {
+        console.log('Usuario guardado en la base de datos:', usuarioGuardado);
+    }).catch(error => {
+        console.error('Error al guardar el usuario:', error);
+    });*/
 }
 
 main();

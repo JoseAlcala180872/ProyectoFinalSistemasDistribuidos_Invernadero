@@ -6,7 +6,7 @@ class UsuarioDAO {
   
     async crearUsuario(usuarioData) {
       try {
-        const usario = new Usuario(usuarioData);
+        const usuario = new Usuario(usuarioData);
         return await usuario.save();
       } catch (error) {
         throw error;

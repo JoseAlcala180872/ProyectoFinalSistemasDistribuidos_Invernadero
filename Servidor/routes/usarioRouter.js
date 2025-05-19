@@ -12,7 +12,7 @@ router.put('/:id', verifyToken, categoriaController.actualizarCategoria);
 router.delete('/:id', verifyToken, categoriaController.eliminarCategoria);
 */
 //router.post('/', verifyToken, datoController.crearDato);
-router.post('/login', usuarioController.crearUsuario);
+router.post('/', usuarioController.crearUsuario);
 
 
 module.exports = router;
