@@ -2,7 +2,24 @@ const WebSocket = require('ws');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
 const amqp = require('amqplib');
+const express = require('express');
+const app = express();
 
+app.use(express.json());
+
+const datoRouter = require('./routes/datoRouter');
+const usarioRouter = require('./routes/usarioRouter');
+app.use('/datos', datoRouter);
+app.use('/usuarios', usarioRouter);
+
+const PORT = process.env.PORT || 3333;
+
+app.listen(PORT, () => {
+    console.log(`Servidor Express escuchando en el puerto ${PORT}`);
+});
+
+
+/*
 const wss = new WebSocket.Server({ port: 4000 });
 
 wss.on('connection', (ws) => {
@@ -35,7 +52,7 @@ wss.on('listening', () => {
 
 wss.on('error', (err) => {
     console.error('Error del servidor WebSocket:', err.message);
-});
+});*/
 
 async function consumirRabbitMQ() {
     const conexion = await amqp.connect('amqp://localhost');
