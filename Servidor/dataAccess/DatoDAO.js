@@ -122,6 +122,32 @@ class DatoDAO {
       throw error;
     }
   }
+
+  async obtenerDatosPorHora() {
+    try {
+      // Agrupa por hora del día actual
+      return await Dato.aggregate([
+        {
+          $match: {
+            fechaHora: {
+              $gte: new Date(new Date().setHours(0,0,0,0)),
+              $lte: new Date()
+            }
+          }
+        },
+        {
+          $group: {
+            _id: { $hour: "$fechaHora" },
+            promedioTemperatura: { $avg: "$temperatura" },
+            promedioHumedad: { $avg: "$humedad" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]);
+    } catch (error) {
+      throw error;
+    }
+  }
   /*
    async obtenerProductoPorId(id) {
      try {

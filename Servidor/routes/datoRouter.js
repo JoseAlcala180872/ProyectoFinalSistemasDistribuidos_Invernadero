@@ -20,4 +20,5 @@ router.get('/lapso', datoController.obtenerDatosPorLapso);
 router.get('/ultima-hora', datoController.obtenerPromedioUltimaHora);
 router.get('/paginados', datoController.obtenerDatosPaginados);
 router.get('/filtrados', datoController.obtenerDatosFiltrados);
+router.get('/por-hora', datoController.obtenerDatosPorHora);
 module.exports = router;

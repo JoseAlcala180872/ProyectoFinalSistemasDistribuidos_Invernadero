@@ -125,6 +125,15 @@ class datoController {
             next(new AppError('Error al obtener datos filtrados.', 500));
         }
     }
+
+    static async obtenerDatosPorHora(req, res, next) {
+        try {
+            const datos = await DatoDAO.obtenerDatosPorHora();
+            res.status(200).json(datos);
+        } catch (error) {
+            next(new AppError('Error al obtener datos por hora.', 500));
+        }
+    }
 }
 
 module.exports = datoController;

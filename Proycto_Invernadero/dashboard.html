@@ -131,22 +131,60 @@
 
     <script type="module">
         import { obtenerUltimosDatos } from './servicios/datosServicio.js';
+        import { obtenerDatosPorHora } from './servicios/datosPorHoraServicio.js';
         // Actualiza los valores de temperatura y humedad en el dashboard
         async function actualizarDashboard() {
             try {
                 const datos = await obtenerUltimosDatos();
                 if (datos && datos.length > 0) {
                     const ultimo = datos[datos.length - 1];
-                    document.querySelector('.stat-card:first-child .stat-value').textContent = `${ultimo.temperatura}°`;
-                    document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = `${ultimo.humedad}%`;
+                    // Cambia ambos valores cada vez
+                    document.querySelectorAll('.stat-card .stat-value')[0].textContent = `${ultimo.temperatura}°`;
+                    document.querySelectorAll('.stat-card .stat-value')[1].textContent = `${ultimo.humedad}%`;
                     document.querySelector('.stat-time').textContent = new Date(ultimo.fechaHora).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
             } catch (error) {
                 console.error('Error al actualizar dashboard:', error);
             }
         }
+        async function actualizarGraficasPorHora() {
+            try {
+                const datos = await obtenerDatosPorHora();
+                // Horas que se muestran en la gráfica (ajusta según tus labels)
+                const horas = [10, 11, 12, 13, 14, 15];
+                const tempChart = document.querySelectorAll('.hourly-chart')[0].querySelectorAll('.data-point');
+                const humChart = document.querySelectorAll('.hourly-chart')[1].querySelectorAll('.data-point');
+                // Escala máxima para la gráfica
+                const maxTemp = 50; // Máxima temperatura esperada
+                const maxHum = 100; // Máxima humedad esperada
+
+                horas.forEach((hora, idx) => {
+                    const dato = datos.find(d => d._id === hora);
+                    if (dato) {
+                        // Calcula el porcentaje invertido (0% arriba, 100% abajo)
+                        const tempPercent = 100 - (dato.promedioTemperatura / maxTemp) * 100;
+                        const humPercent = 100 - (dato.promedioHumedad / maxHum) * 100;
+                        tempChart[idx].style.top = `${tempPercent}%`;
+                        tempChart[idx].title = `${dato.promedioTemperatura.toFixed(1)}°C`;
+                        humChart[idx].style.top = `${humPercent}%`;
+                        humChart[idx].title = `${dato.promedioHumedad.toFixed(1)}%`;
+                    } else {
+                        tempChart[idx].style.top = '100%';
+                        tempChart[idx].title = 'Sin datos';
+                        humChart[idx].style.top = '100%';
+                        humChart[idx].title = 'Sin datos';
+                    }
+                });
+            } catch (error) {
+                console.error('Error al actualizar gráficas por hora:', error);
+            }
+        }
         actualizarDashboard();
-        setInterval(actualizarDashboard, 5000);
+        actualizarGraficasPorHora();
+        setInterval(() => {
+            actualizarDashboard();
+            actualizarGraficasPorHora();
+        }, 5000);
     </script>
 </body>
 </html>
