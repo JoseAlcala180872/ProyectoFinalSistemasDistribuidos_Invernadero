@@ -24,12 +24,12 @@
         
         <form class="login-form">
             <div class="form-group">
-                <label for="email">Usuario</label>
+                <label for="email">Correo electrónico</label>
                 <div class="input-with-icon">
                    <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
-                    <input type="text" id="username" placeholder="Ingresa tu nombre de usuario" required>
+                    <input type="email" id="email" placeholder="ejemplo@correo.com" required>
                 </div>
             </div>
             
@@ -55,19 +55,21 @@
         </div>
     </div>
 
-    <script>
-        // Para validación básica de formulario
-        document.querySelector('.login-form').addEventListener('submit', function(e) {
+    <script type="module">
+        import { loginUsuario } from './servicios/loginUsuario.js';
+        document.querySelector('.login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Aquí puedes agregar la lógica de autenticación
-            console.log('Intentando iniciar sesión con:', email);
-            
-            // Redireccionar al dashboard después de la autenticación exitosa
-            // window.location.href = 'dashboard.html';
+            const correo = document.getElementById('email').value;
+            const clave = document.getElementById('password').value;
+            try {
+                const usuario = await loginUsuario(correo, clave);
+                alert('Bienvenido, ' + usuario.nombre);
+                // Redireccionar al dashboard después de la autenticación exitosa
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                alert('Error de inicio de sesión: ' + error.message);
+            }
         });
     </script>
-</body>
+  </body>
 </html>

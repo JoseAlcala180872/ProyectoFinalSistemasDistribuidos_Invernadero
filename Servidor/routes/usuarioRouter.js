@@ -14,5 +14,7 @@ router.delete('/:id', verifyToken, categoriaController.eliminarCategoria);
 //router.post('/', verifyToken, datoController.crearDato);
 router.post('/', usuarioController.crearUsuario);
 
+router.get('/:correo', usuarioController.obtenerUsuarioPorCorreo);
+//router.get('/:id', datoController.obtenerDatoPorId);
 
 module.exports = router;

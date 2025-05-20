@@ -12,6 +12,26 @@ class UsuarioDAO {
         throw error;
       }
     }
+    
+    /*
+    async obtenerUsuarioPorId(id) {
+      try {
+        return await Usuario.findById(id);
+      } catch (error) {
+        throw error;
+      }
+
+    }
+      */
+  
+   async obtenerUsuarioPorCorreo(correo) {
+      try {
+        return await Usuario.findOne({ correo });
+      } catch (error) {
+        throw error;
+      }
+    }
+
    /*
     async obtenerProductoPorId(id) {
       try {
