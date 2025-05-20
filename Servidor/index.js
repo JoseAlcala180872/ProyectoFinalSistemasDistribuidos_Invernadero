@@ -60,7 +60,7 @@ wss.on('error', (err) => {
 async function consumirRabbitMQ() {
     //aqui va la contraseña y el usuario para rabbitmq
     // ejemplo: amqp://usuario:contraseña@localhost'
-    const conexion = await amqp.connect('amqp://admin:proyectos21@localhost');
+    const conexion = await amqp.connect('amqp://localhost');
     const canal = await conexion.createChannel();
     await canal.assertQueue('datos_sensores');
     canal.consume('datos_sensores', async (msg) => {
