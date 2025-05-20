@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Invernadero - Sensores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="asstets/css/sensores-estilos.css">
+
+</head>
+<body>
+    <!-- Barra lateral -->
+    <nav class="sidebar">
+        <a href="index.html" class="sidebar-icon" title="Dashboard">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="greenhouse-sensors.html" class="sidebar-icon active" title="Sensores">
+            <i class="fas fa-microchip"></i>
+        </a>
+        <a href="greenhouse-alarms.html" class="sidebar-icon" title="Notificaciones">
+            <i class="fas fa-bell"></i>
+        </a>
+        <a href="greenhouse-stats.html" class="sidebar-icon" title="Estadísticas">
+            <i class="fas fa-chart-line"></i>
+        </a>
+        <a href="greenhouse-settings.html" class="sidebar-icon" title="Configuración">
+            <i class="fas fa-cog"></i>
+        </a>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <div class="navbar">
+            <h1>Sensores</h1>
+            <div class="user-info">
+                <div class="weather-info">
+                    <i class="fas fa-cloud-sun weather-icon"></i>
+                    <span>Exterior: 18°C</span>
+                </div>
+                <div class="user-avatar">AG</div>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Buscar sensores...">
+            </div>
+            <button class="add-sensor-btn">
+                <i class="fas fa-plus"></i>
+                <span>Agregar Sensor</span>
+            </button>
+        </div>
+        
+        <div class="sensors-table">
+            <div class="table-header">
+                <div>Nombre</div>
+                <div>Tipo de sensor</div>
+                <div>Estatus</div>
+                <div>Valor actual</div>
+                <div>Acciones</div>
+            </div>
+            
+            <div class="sensor-row">
+                <div>
+                    <div class="sensor-name">THS-250310</div>
+                    <div class="sensor-id">ID: SN-78425</div>
+                </div>
+                <div class="sensor-type">
+                    <div class="sensor-icon temp">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <span>Temperatura</span>
+                </div>
+                <div class="sensor-status">
+                    <div class="status-indicator"></div>
+                    <span>Activo</span>
+                </div>
+                <div class="sensor-value">
+                    9.2 <span class="value-unit">°C</span>
+                </div>
+                <div class="sensor-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sensor-row">
+                <div>
+                    <div class="sensor-name">HUM-250311</div>
+                    <div class="sensor-id">ID: SN-78426</div>
+                </div>
+                <div class="sensor-type">
+                    <div class="sensor-icon humidity">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <span>Humedad</span>
+                </div>
+                <div class="sensor-status">
+                    <div class="status-indicator"></div>
+                    <span>Activo</span>
+                </div>
+                <div class="sensor-value">
+                    34 <span class="value-unit">%</span>
+                </div>
+                <div class="sensor-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sensor-row">
+                <div>
+                    <div class="sensor-name">CO2-250312</div>
+                    <div class="sensor-id">ID: SN-78427</div>
+                </div>
+                <div class="sensor-type">
+                    <div class="sensor-icon co2">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <span>Nivel de CO2</span>
+                </div>
+                <div class="sensor-status">
+                    <div class="status-indicator warning"></div>
+                    <span>Advertencia</span>
+                </div>
+                <div class="sensor-value">
+                    850 <span class="value-unit">ppm</span>
+                </div>
+                <div class="sensor-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sensor-row">
+                <div>
+                    <div class="sensor-name">LIT-250313</div>
+                    <div class="sensor-id">ID: SN-78428</div>
+                </div>
+                <div class="sensor-type">
+                    <div class="sensor-icon light">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <span>Iluminación</span>
+                </div>
+                <div class="sensor-status">
+                    <div class="status-indicator"></div>
+                    <span>Activo</span>
+                </div>
+                <div class="sensor-value">
+                    4300 <span class="value-unit">lux</span>
+                </div>
+                <div class="sensor-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sensor-row">
+                <div>
+                    <div class="sensor-name">SOL-250314</div>
+                    <div class="sensor-id">ID: SN-78429</div>
+                </div>
+                <div class="sensor-type">
+                    <div class="sensor-icon soil">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <span>Humedad de suelo</span>
+                </div>
+                <div class="sensor-status">
+                    <div class="status-indicator error"></div>
+                    <span>Error</span>
+                </div>
+                <div class="sensor-value">
+                    -- <span class="value-unit">%</span>
+                </div>
+                <div class="sensor-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="action-btn delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sensor-details">
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div class="detail-title">Total de sensores</div>
+                    <div class="detail-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-value">5</div>
+                </div>
+            </div>
+            
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div class="detail-title">Sensores activos</div>
+                    <div class="detail-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-value">3</div>
+                </div>
+            </div>
+            
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div class="detail-title">Sensores con advertencia</div>
+                    <div class="detail-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-value">1</div>
+                </div>
+            </div>
+            
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div class="detail-title">Sensores con error</div>
+                    <div class="detail-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+                <div class="detail-content">
+                    <div class="detail-value">1</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Volver al Dashboard</a>
+            <a href="greenhouse-alarms.html" class="nav-link">Ver Alarmas</a>
+            <a href="greenhouse-data.html" class="nav-link">Ver Datos</a>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de datos en tiempo real
+        function updateSensorData() {
+            // Actualizar valores de los sensores
+            const tempValue = document.querySelector('.sensor-row:nth-child(2) .sensor-value');
+            const currentTemp = parseFloat(tempValue.textContent);
+            const newTemp = (currentTemp + (Math.random() * 0.6 - 0.3)).toFixed(1);
+            tempValue.innerHTML = `${newTemp} <span class="value-unit">°C</span>`;
+            
+            const humValue = document.querySelector('.sensor-row:nth-child(3) .sensor-value');
+            const currentHum = parseInt(humValue.textContent);
+            const newHum = currentHum + Math.floor(Math.random() * 3) - 1;
+            humValue.innerHTML = `${newHum} <span class="value-unit">%</span>`;
+            
+            const co2Value = document.querySelector('.sensor-row:nth-child(4) .sensor-value');
+            const currentCO2 = parseInt(co2Value.textContent);
+            const newCO2 = currentCO2 + Math.floor(Math.random() * 30) - 15;
+            co2Value.innerHTML = `${newCO2} <span class="value-unit">ppm</span>`;
+            
+            // Actualizar estados de los sensores aleatoriamente
+            const statuses = document.querySelectorAll('.status-indicator');
+            statuses.forEach(status => {
+                const random = Math.random();
+                if (random > 0.95) {
+                    status.className = 'status-indicator error';
+                    status.nextElementSibling.textContent = 'Error';
+                } else if (random > 0.85) {
+                    status.className = 'status-indicator warning';
+                    status.nextElementSibling.textContent = 'Advertencia';
+                } else {
+                    status.className = 'status-indicator';
+                    status.nextElementSibling.textContent = 'Activo';
+                }
+            });
+            
+            // Programar próxima actualización
+            setTimeout(updateSensorData, 5000);
+        }
+        
+        // Iniciar actualización de datos
+        updateSensorData();
+        
+        // Implementar filtrado de búsqueda
+        const searchInput = document.querySelector('.search-input');
+        const sensorRows = document.querySelectorAll('.sensor-row');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            sensorRows.forEach(row => {
+                const sensorName = row.querySelector('.sensor-name').textContent.toLowerCase();
+                const sensorId = row.querySelector('.sensor-id').textContent.toLowerCase();
+                const sensorType = row.querySelector('.sensor-type span').textContent.toLowerCase();
+                
+                if (sensorName.includes(searchTerm) || 
+                    sensorId.includes(searchTerm) || 
+                    sensorType.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Implementar funcionalidad para los botones de acción
+        const actionButtons = document.querySelectorAll('.action-btn');
+        
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const isDelete = this.classList.contains('delete');
+                const sensorRow = this.closest('.sensor-row');
+                const sensorName = sensorRow.querySelector('.sensor-name').textContent;
+                
+                if (isDelete) {
+                    if (confirm(`¿Está seguro que desea eliminar el sensor ${sensorName}?`)) {
+                        sensorRow.style.opacity = '0';
+                        setTimeout(() => {
+                            sensorRow.remove();
+                            updateSensorCounts();
+                        }, 300);
+                    }
+                } else {
+                    alert(`Editando sensor: ${sensorName}`);
+                }
+            });
+        });
+        
+        // Actualizar contadores de sensores
+        function updateSensorCounts() {
+            const totalSensors = document.querySelectorAll('.sensor-row').length;
+            const activeSensors = document.querySelectorAll('.status-indicator:not(.warning):not(.error)').length;
+            const warningSensors = document.querySelectorAll('.status-indicator.warning').length;
+            const errorSensors = document.querySelectorAll('.status-indicator.error').length;
+            
+            document.querySelector('.detail-card:nth-child(1) .detail-value').textContent = totalSensors;
+            document.querySelector('.detail-card:nth-child(2) .detail-value').textContent = activeSensors;
+            document.querySelector('.detail-card:nth-child(3) .detail-value').textContent = warningSensors;
+            document.querySelector('.detail-card:nth-child(4) .detail-value').textContent = errorSensors;
+        }
+        
+        // Implementar paginación
+        const pageButtons = document.querySelectorAll('.page-btn');
+        
+        pageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (!this.classList.contains('active') && !this.innerHTML.includes('fa-chevron')) {
+                    document.querySelector('.page-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
