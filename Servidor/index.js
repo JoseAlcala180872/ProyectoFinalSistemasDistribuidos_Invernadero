@@ -1,25 +1,28 @@
 const WebSocket = require('ws');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
+//const UsuarioDAO = require('./dataAccess/UsuarioDAO');
 const amqp = require('amqplib');
-//utilizado para la prueba de postman
 const express = require('express');
-const sensorRoutes = require('./routes/sensorRoute');
-const datoRoute = require('./routes/datoRoute');
-
 const app = express();
+
 app.use(express.json());
 
-//Ruta para consultar sensores en Postman
-app.use('/sensores', sensorRoutes);
-app.use('/datos', datoRoute);
+const sensorRouter = require('./routes/sensorRouter');
+const datoRouter = require('./routes/datoRouter');
+const usarioRouter = require('./routes/usarioRouter');
+app.use('/datos', datoRouter);
+app.use('/usuarios', usarioRouter);
+app.use('/sensores', sensorRouter);
 
-const PORT_HTTP = 3100;
-app.listen(PORT_HTTP, () => {
-    console.log(`Servidor HTTP corriendo en puerto ${PORT_HTTP}`);
+const PORT = process.env.PORT || 3333;
+
+app.listen(PORT, () => {
+    console.log(`Servidor Express escuchando en el puerto ${PORT}`);
 });
-//fin  prueba postman
 
+
+/*
 const wss = new WebSocket.Server({ port: 4000 });
 
 wss.on('connection', (ws) => {
@@ -52,7 +55,7 @@ wss.on('listening', () => {
 
 wss.on('error', (err) => {
     console.error('Error del servidor WebSocket:', err.message);
-});
+});*/
 
 async function consumirRabbitMQ() {
     //aqui va la contraseña y el usuario para rabbitmq
@@ -89,6 +92,15 @@ async function main() {
     });
 
     consumirRabbitMQ();
+    /*UsuarioDAO.crearUsuario({
+  "nombre": "Juan",
+  "correo": "juan@ejemplo.com",
+  "clave": "123456"
+    }).then(usuarioGuardado => {
+        console.log('Usuario guardado en la base de datos:', usuarioGuardado);
+    }).catch(error => {
+        console.error('Error al guardar el usuario:', error);
+    });*/
 }
 
 main();
