@@ -1,8 +1,28 @@
 const WebSocket = require('ws');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
+//const UsuarioDAO = require('./dataAccess/UsuarioDAO');
 const amqp = require('amqplib');
+const express = require('express');
+const app = express();
 
+app.use(express.json());
+
+const sensorRouter = require('./routes/sensorRoute');
+const datoRouter = require('./routes/datoRouter');
+const usarioRouter = require('./routes/usarioRouter');
+app.use('/datos', datoRouter);
+app.use('/usuarios', usarioRouter);
+app.use('/sensores', sensorRouter);
+
+const PORT = process.env.PORT || 3333;
+
+app.listen(PORT, () => {
+    console.log(`Servidor Express escuchando en el puerto ${PORT}`);
+});
+
+
+/*
 const wss = new WebSocket.Server({ port: 4000 });
 
 wss.on('connection', (ws) => {
@@ -35,10 +55,12 @@ wss.on('listening', () => {
 
 wss.on('error', (err) => {
     console.error('Error del servidor WebSocket:', err.message);
-});
+});*/
 
 async function consumirRabbitMQ() {
-    const conexion = await amqp.connect('amqp://localhost');
+    //aqui va la contraseña y el usuario para rabbitmq
+    // ejemplo: amqp://usuario:contraseña@localhost'
+    const conexion = await amqp.connect('amqp://admin:proyectos21@localhost');
     const canal = await conexion.createChannel();
     await canal.assertQueue('datos_sensores');
     canal.consume('datos_sensores', async (msg) => {
@@ -70,6 +92,15 @@ async function main() {
     });
 
     consumirRabbitMQ();
+    /*UsuarioDAO.crearUsuario({
+  "nombre": "Juan",
+  "correo": "juan@ejemplo.com",
+  "clave": "123456"
+    }).then(usuarioGuardado => {
+        console.log('Usuario guardado en la base de datos:', usuarioGuardado);
+    }).catch(error => {
+        console.error('Error al guardar el usuario:', error);
+    });*/
 }
 
 main();

@@ -14,7 +14,8 @@ const wss = new WebSocket.Server({ port: 3000 });
 let canalRabbitMQ;
 
 async function conectarRabbitMQ() {
-    const conexion = await amqp.connect('amqp://localhost');
+    //aqui va la contraseña y el usuario para rabbitmq
+    const conexion = await amqp.connect('amqp://admin:proyectos21@localhost');
     canalRabbitMQ = await conexion.createChannel();
     await canalRabbitMQ.assertQueue('datos_sensores');
     console.log('Conectado a RabbitMQ');
