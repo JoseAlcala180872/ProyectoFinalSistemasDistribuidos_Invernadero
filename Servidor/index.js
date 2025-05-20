@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-const sensorRouter = require('./routes/sensorRouter');
+const sensorRouter = require('./routes/sensorRoute');
 const datoRouter = require('./routes/datoRouter');
 const usarioRouter = require('./routes/usarioRouter');
 app.use('/datos', datoRouter);

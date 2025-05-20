@@ -11,5 +11,13 @@ router.post('/match', verifyToken, categoriaController.crearCategoriaMatch);
 router.put('/:id', verifyToken, categoriaController.actualizarCategoria);
 router.delete('/:id', verifyToken, categoriaController.eliminarCategoria);
 */
+router.get('/', datoController.obtenerDatos);
 router.post('/', datoController.crearDato);
+router.get('/agrupados', datoController.obtenerDatosAgrupados);
+router.get('/ultimasFechas', datoController.obtenerUltimasFechas);
+//esta se maneja asi: http://localhost:3333/datos/lapso?inicio=2025-05-01&fin=2025-05-17
+router.get('/lapso', datoController.obtenerDatosPorLapso);
+router.get('/ultima-hora', datoController.obtenerPromedioUltimaHora);
+router.get('/paginados', datoController.obtenerDatosPaginados);
+router.get('/filtrados', datoController.obtenerDatosFiltrados);
 module.exports = router;
