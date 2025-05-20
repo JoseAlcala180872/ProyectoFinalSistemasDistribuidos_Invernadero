@@ -1,6 +1,9 @@
 const WebSocket = require('ws');
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
+const AlarmaDAO = require('./dataAccess/AlarmaDAO');
+const Notificacion = require('./utils/notificacion');
 //const UsuarioDAO = require('./dataAccess/UsuarioDAO');
 const amqp = require('amqplib');
 const express = require('express');
@@ -10,10 +13,13 @@ app.use(express.json());
 
 const sensorRouter = require('./routes/sensorRoute');
 const datoRouter = require('./routes/datoRouter');
-const usarioRouter = require('./routes/usarioRouter');
+const alarmaRouter = require('./routes/alarmaRouter');
+const usuarioRouter = require('./routes/usuarioRouter');
+const { syslog } = require('winston/lib/winston/config');
 app.use('/datos', datoRouter);
-app.use('/usuarios', usarioRouter);
+app.use('/usuarios', usuarioRouter);
 app.use('/sensores', sensorRouter);
+app.use('/alarmas', alarmaRouter);
 
 const PORT = process.env.PORT || 3333;
 
@@ -67,6 +73,23 @@ async function consumirRabbitMQ() {
         if (msg !== null) {
             try {
                 const sensorData = JSON.parse(msg.content.toString());
+
+                const alarmas = await AlarmaDAO.obtenerTodasLasAlarmas();
+
+                for (const alarma of alarmas) {
+                    if (
+                        (alarma.parametro === "temperatura" && sensorData.temperatura >= alarma.umbral) ||
+                        (alarma.parametro === "humedad" && sensorData.humedad >= alarma.umbral)
+                    ) {
+                        if (!alarma.estado) {
+                            await AlarmaDAO.activarAlarma(alarma.id);
+                            await Notificacion.enviarCorreo(
+                                alarma.correoNotificacion,
+                                `⚠️ Alarma activada: ${alarma.tipo}\nTemperatura actual: ${sensorData.temperatura}°C`
+                            );
+                        }
+                    }
+                }
                 // Guardar los datos en la base de datos
                 await DatoDAO.crearDato(sensorData).then(datoGuardado => {
                     console.log('Dato guardado en la base de datos:', datoGuardado);
