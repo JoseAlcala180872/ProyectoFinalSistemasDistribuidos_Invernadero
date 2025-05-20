@@ -10,9 +10,11 @@ app.use(express.json());
 
 const sensorRouter = require('./routes/sensorRoute');
 const datoRouter = require('./routes/datoRouter');
-const usarioRouter = require('./routes/usarioRouter');
+const cors = require('cors');
+app.use(cors());
+const usuarioRouter = require('./routes/usuarioRouter');
 app.use('/datos', datoRouter);
-app.use('/usuarios', usarioRouter);
+app.use('/usuarios', usuarioRouter);
 app.use('/sensores', sensorRouter);
 
 const PORT = process.env.PORT || 3333;
