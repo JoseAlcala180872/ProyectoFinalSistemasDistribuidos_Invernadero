@@ -129,28 +129,24 @@
         </div>
     </div>
 
-    <script>
-        // Simulación de datos en tiempo real
-        function updateData() {
-            // Actualizar temperatura
-            const tempValue = document.querySelector('.stat-card:first-child .stat-value');
-            const currentTemp = parseInt(tempValue.textContent);
-            const newTemp = currentTemp + Math.floor(Math.random() * 3) - 1;
-            tempValue.textContent = newTemp + '°';
-            
-            // Actualizar hora
-            const timeElem = document.querySelector('.stat-time');
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            timeElem.textContent = `${hours}:${minutes}`;
-            
-            // Programar próxima actualización
-            setTimeout(updateData, 60000);
+    <script type="module">
+        import { obtenerUltimosDatos } from './servicios/datosServicio.js';
+        // Actualiza los valores de temperatura y humedad en el dashboard
+        async function actualizarDashboard() {
+            try {
+                const datos = await obtenerUltimosDatos();
+                if (datos && datos.length > 0) {
+                    const ultimo = datos[datos.length - 1];
+                    document.querySelector('.stat-card:first-child .stat-value').textContent = `${ultimo.temperatura}°`;
+                    document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = `${ultimo.humedad}%`;
+                    document.querySelector('.stat-time').textContent = new Date(ultimo.fechaHora).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+            } catch (error) {
+                console.error('Error al actualizar dashboard:', error);
+            }
         }
-        
-        // Iniciar actualización de datos
-        updateData();
+        actualizarDashboard();
+        setInterval(actualizarDashboard, 5000);
     </script>
 </body>
 </html>
