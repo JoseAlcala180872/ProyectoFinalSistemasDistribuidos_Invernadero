@@ -224,7 +224,107 @@ body {
   background: var(--primary-dark, #5652e5);
 }
 
+.add-alarm-btn {
+  background: var(--primary-color, #7b78ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.add-alarm-btn:hover {
+  background: var(--primary-dark, #5652e5);
+}
+
+.modal-agregar {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  min-width: 320px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-content h2 {
+  margin-bottom: 10px;
+  color: var(--primary-dark, #5652e5);
+}
+
+.modal-content label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.modal-content input, .modal-content select {
+  padding: 8px 10px;
+  border: 1px solid #c5c6f1;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #f8fafc;
+  margin-bottom: 10px;
+}
+
+.modal-content button[type="submit"] {
+  background: var(--primary-color, #7b78ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background 0.2s;
+}
+
+.modal-content button[type="submit"]:hover {
+  background: var(--primary-dark, #5652e5);
+}
+
+.modal-content button[type="button"] {
+  background: #e2e3fc;
+  color: #5652e5;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s;
+}
+
+.modal-content button[type="button"]:hover {
+  background: #c5c6f1;
+}
+
 #mensajeAlarma {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #e53e3e;
+}
+
+#mensajeAlarmaModal {
   margin-top: 10px;
   font-size: 15px;
   color: #e53e3e;

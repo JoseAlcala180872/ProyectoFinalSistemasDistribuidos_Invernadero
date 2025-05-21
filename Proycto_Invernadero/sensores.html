@@ -11,16 +11,16 @@
 <body>
     <!-- Barra lateral -->
     <nav class="sidebar">
-        <a href="index.html" class="sidebar-icon" title="Dashboard">
+        <a href="dashboard.html" class="sidebar-icon" title="Dashboard">
             <i class="fas fa-home"></i>
         </a>
-        <a href="greenhouse-sensors.html" class="sidebar-icon active" title="Sensores">
+        <a href="sensores.html" class="sidebar-icon active" title="Sensores">
             <i class="fas fa-microchip"></i>
         </a>
-        <a href="greenhouse-alarms.html" class="sidebar-icon" title="Notificaciones">
+        <a href="alarmas.html" class="sidebar-icon" title="Notificaciones">
             <i class="fas fa-bell"></i>
         </a>
-        <a href="greenhouse-stats.html" class="sidebar-icon" title="Estadísticas">
+        <a href="datosFecha.html" class="sidebar-icon" title="Estadísticas">
             <i class="fas fa-chart-line"></i>
         </a>
         <a href="greenhouse-settings.html" class="sidebar-icon" title="Configuración">
@@ -44,161 +44,43 @@
         <div class="header-actions">
             <div class="search-bar">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Buscar sensores...">
+                <input type="text" class="search-input" placeholder="Buscar sensores..." id="buscarSensor">
             </div>
-            <button class="add-sensor-btn">
+            <button class="add-sensor-btn" id="abrirAgregarSensor">
                 <i class="fas fa-plus"></i>
                 <span>Agregar Sensor</span>
             </button>
         </div>
-        
-        <div class="sensors-table">
+
+        <div class="sensors-table" id="tablaSensores">
             <div class="table-header">
                 <div>Nombre</div>
                 <div>Tipo de sensor</div>
-                <div>Estatus</div>
-                <div>Valor actual</div>
+                <div>Ubicación</div>
                 <div>Acciones</div>
             </div>
-            
-            <div class="sensor-row">
-                <div>
-                    <div class="sensor-name">THS-250310</div>
-                    <div class="sensor-id">ID: SN-78425</div>
-                </div>
-                <div class="sensor-type">
-                    <div class="sensor-icon temp">
-                        <i class="fas fa-temperature-high"></i>
-                    </div>
-                    <span>Temperatura</span>
-                </div>
-                <div class="sensor-status">
-                    <div class="status-indicator"></div>
-                    <span>Activo</span>
-                </div>
-                <div class="sensor-value">
-                    9.2 <span class="value-unit">°C</span>
-                </div>
-                <div class="sensor-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="action-btn delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="sensor-row">
-                <div>
-                    <div class="sensor-name">HUM-250311</div>
-                    <div class="sensor-id">ID: SN-78426</div>
-                </div>
-                <div class="sensor-type">
-                    <div class="sensor-icon humidity">
-                        <i class="fas fa-tint"></i>
-                    </div>
-                    <span>Humedad</span>
-                </div>
-                <div class="sensor-status">
-                    <div class="status-indicator"></div>
-                    <span>Activo</span>
-                </div>
-                <div class="sensor-value">
-                    34 <span class="value-unit">%</span>
-                </div>
-                <div class="sensor-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="action-btn delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="sensor-row">
-                <div>
-                    <div class="sensor-name">CO2-250312</div>
-                    <div class="sensor-id">ID: SN-78427</div>
-                </div>
-                <div class="sensor-type">
-                    <div class="sensor-icon co2">
-                        <i class="fas fa-wind"></i>
-                    </div>
-                    <span>Nivel de CO2</span>
-                </div>
-                <div class="sensor-status">
-                    <div class="status-indicator warning"></div>
-                    <span>Advertencia</span>
-                </div>
-                <div class="sensor-value">
-                    850 <span class="value-unit">ppm</span>
-                </div>
-                <div class="sensor-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="action-btn delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="sensor-row">
-                <div>
-                    <div class="sensor-name">LIT-250313</div>
-                    <div class="sensor-id">ID: SN-78428</div>
-                </div>
-                <div class="sensor-type">
-                    <div class="sensor-icon light">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <span>Iluminación</span>
-                </div>
-                <div class="sensor-status">
-                    <div class="status-indicator"></div>
-                    <span>Activo</span>
-                </div>
-                <div class="sensor-value">
-                    4300 <span class="value-unit">lux</span>
-                </div>
-                <div class="sensor-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="action-btn delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="sensor-row">
-                <div>
-                    <div class="sensor-name">SOL-250314</div>
-                    <div class="sensor-id">ID: SN-78429</div>
-                </div>
-                <div class="sensor-type">
-                    <div class="sensor-icon soil">
-                        <i class="fas fa-water"></i>
-                    </div>
-                    <span>Humedad de suelo</span>
-                </div>
-                <div class="sensor-status">
-                    <div class="status-indicator error"></div>
-                    <span>Error</span>
-                </div>
-                <div class="sensor-value">
-                    -- <span class="value-unit">%</span>
-                </div>
-                <div class="sensor-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="action-btn delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
+            <!-- Aquí se llenarán los sensores dinámicamente -->
+        </div>
+
+        <div class="modal-agregar" id="modalAgregarSensor" style="display:none;">
+            <div class="modal-content">
+                <h2>Agregar sensor</h2>
+                <form id="formAgregarSensor">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" required>
+                    <label for="tipoDatoTemperatura">Tipo de sensor</label>
+                    <select id="tipoDatoTemperatura" required>
+                        <option value="Temperatura">Temperatura</option>
+                        <option value="Humedad">Humedad</option>
+                        <option value="CO2">CO2</option>
+                        <option value="Iluminación">Iluminación</option>
+                        <option value="Humedad de suelo">Humedad de suelo</option>
+                    </select>
+                    <label for="ubicacion">Ubicación</label>
+                    <input type="text" id="ubicacion" required>
+                    <button type="submit">Agregar</button>
+                    <button type="button" id="cerrarModalAgregar">Cancelar</button>
+                </form>
             </div>
         </div>
         
@@ -378,6 +260,107 @@
                 }
             });
         });
+
+        // Lógica para el modal de agregar sensor
+        const modalAgregarSensor = document.getElementById('modalAgregarSensor');
+        const abrirAgregarSensor = document.getElementById('abrirAgregarSensor');
+        const cerrarModalAgregar = document.getElementById('cerrarModalAgregar');
+        const formAgregarSensor = document.getElementById('formAgregarSensor');
+
+        abrirAgregarSensor.addEventListener('click', function() {
+            modalAgregarSensor.style.display = 'block';
+        });
+
+        cerrarModalAgregar.addEventListener('click', function() {
+            modalAgregarSensor.style.display = 'none';
+        });
+
+        formAgregarSensor.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const tipoDatoTemperatura = document.getElementById('tipoDatoTemperatura').value;
+            const ubicacion = document.getElementById('ubicacion').value;
+
+            // Aquí se debería hacer la llamada al backend para agregar el sensor
+            // fetch('/ruta/al/api/agregar-sensor', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ nombre, tipoDatoTemperatura, ubicacion })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     console.log('Sensor agregado:', data);
+            //     modalAgregarSensor.style.display = 'none';
+            //     // Aquí se puede agregar el nuevo sensor a la tabla sin recargar
+            // })
+            // .catch(error => console.error('Error al agregar sensor:', error));
+
+            modalAgregarSensor.style.display = 'none';
+        });
     </script>
+    <script type="module">
+import { obtenerSensores, agregarSensor } from './servicios/sensorServicio.js';
+
+const tabla = document.getElementById('tablaSensores');
+const modal = document.getElementById('modalAgregarSensor');
+const abrirBtn = document.getElementById('abrirAgregarSensor');
+const cerrarBtn = document.getElementById('cerrarModalAgregar');
+const form = document.getElementById('formAgregarSensor');
+const buscarInput = document.getElementById('buscarSensor');
+
+function iconoPorTipo(tipo) {
+  if (tipo.toLowerCase().includes('temp')) return '<i class="fas fa-temperature-high"></i>';
+  if (tipo.toLowerCase().includes('humedad')) return '<i class="fas fa-tint"></i>';
+  if (tipo.toLowerCase().includes('co2')) return '<i class="fas fa-wind"></i>';
+  if (tipo.toLowerCase().includes('ilumin')) return '<i class="fas fa-sun"></i>';
+  if (tipo.toLowerCase().includes('suelo')) return '<i class="fas fa-water"></i>';
+  return '<i class="fas fa-microchip"></i>';
+}
+
+async function mostrarSensores(filtro = '') {
+  tabla.innerHTML = `<div class="table-header">
+    <div>Nombre</div><div>Tipo de sensor</div><div>Ubicación</div><div>Acciones</div></div>`;
+  try {
+    const sensores = await obtenerSensores();
+    sensores.filter(s => s.nombre.toLowerCase().includes(filtro.toLowerCase())).forEach(sensor => {
+      const row = document.createElement('div');
+      row.className = 'sensor-row';
+      row.innerHTML = `
+        <div><div class="sensor-name">${sensor.nombre}</div></div>
+        <div class="sensor-type">${iconoPorTipo(sensor.tipoDatoTemperatura)} <span>${sensor.tipoDatoTemperatura}</span></div>
+        <div>${sensor.ubicacion}</div>
+        <div class="sensor-actions">
+          <button class="action-btn delete" title="Eliminar" disabled><i class="fas fa-trash"></i></button>
+        </div>
+      `;
+      tabla.appendChild(row);
+    });
+  } catch (e) {
+    tabla.innerHTML += '<div>Error al cargar sensores</div>';
+  }
+}
+
+abrirBtn.onclick = () => { modal.style.display = 'flex'; };
+cerrarBtn.onclick = () => { modal.style.display = 'none'; };
+form.onsubmit = async function(e) {
+  e.preventDefault();
+  const nombre = document.getElementById('nombre').value;
+  const tipoDatoTemperatura = document.getElementById('tipoDatoTemperatura').value;
+  const ubicacion = document.getElementById('ubicacion').value;
+  try {
+    await agregarSensor({ nombre, tipoDatoTemperatura, ubicacion });
+    modal.style.display = 'none';
+    form.reset();
+    mostrarSensores();
+  } catch (err) {
+    alert('Error al agregar sensor');
+  }
+};
+buscarInput.oninput = e => mostrarSensores(e.target.value);
+mostrarSensores();
+</script>
 </body>
 </html>
