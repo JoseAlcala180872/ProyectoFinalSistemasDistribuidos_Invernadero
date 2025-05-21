@@ -11,14 +11,14 @@ router.post('/match', verifyToken, categoriaController.crearCategoriaMatch);
 router.put('/:id', verifyToken, categoriaController.actualizarCategoria);
 router.delete('/:id', verifyToken, categoriaController.eliminarCategoria);
 */
-router.get('/', datoController.obtenerDatos);
-router.post('/', datoController.crearDato);
-router.get('/agrupados', datoController.obtenerDatosAgrupados);
-router.get('/ultimasFechas', datoController.obtenerUltimasFechas);
+router.get('/', verifyToken, datoController.obtenerDatos);
+router.post('/', verifyToken, datoController.crearDato);
+router.get('/agrupados', verifyToken, datoController.obtenerDatosAgrupados);
+router.get('/ultimasFechas', verifyToken, datoController.obtenerUltimasFechas);
 //esta se maneja asi: http://localhost:3333/datos/lapso?inicio=2025-05-01&fin=2025-05-17
-router.get('/lapso', datoController.obtenerDatosPorLapso);
-router.get('/ultima-hora', datoController.obtenerPromedioUltimaHora);
-router.get('/paginados', datoController.obtenerDatosPaginados);
-router.get('/filtrados', datoController.obtenerDatosFiltrados);
-router.get('/por-hora', datoController.obtenerDatosPorHora);
+router.get('/lapso', verifyToken, datoController.obtenerDatosPorLapso);
+router.get('/ultima-hora', verifyToken, datoController.obtenerPromedioUltimaHora);
+router.get('/paginados', verifyToken, datoController.obtenerDatosPaginados);
+router.get('/filtrados', verifyToken, datoController.obtenerDatosFiltrados);
+router.get('/por-hora', verifyToken, datoController.obtenerDatosPorHora);
 module.exports = router;

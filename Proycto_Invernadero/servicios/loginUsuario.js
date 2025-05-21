@@ -11,7 +11,11 @@ export async function loginUsuario(correo, clave) {
       const error = await response.json();
       throw new Error(error.message || 'Error al iniciar sesión');
     }
-    return await response.json();
+    const data = await response.json();
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
+    return data;
   } catch (error) {
     throw error;
   }

@@ -34,24 +34,26 @@ class usuarioController {
     }
 
     static async loginUsuario(req, res, next) {
-    try {
-        const { correo, clave } = req.body;
-        const usuario = await UsuarioDAO.obtenerUsuarioPorCorreo(correo);
-        if (!usuario) {
-            return next(new AppError('Usuario no encontrado.', 404));
+        try {
+            const { correo, clave } = req.body;
+            const usuario = await UsuarioDAO.obtenerUsuarioPorCorreo(correo);
+            if (!usuario) {
+                return next(new AppError('Usuario no encontrado.', 404));
+            }
+            const esValida = await bcrypt.compare(clave, usuario.clave);
+            if (!esValida) {
+                return next(new AppError('Contraseña incorrecta.', 401));
+            }
+            // Generar token JWT
+            const { generateToken } = require('../utils/jwt');
+            const usuarioSinClave = usuario.toObject();
+            delete usuarioSinClave.clave;
+            const token = generateToken({ id: usuario._id, correo: usuario.correo, nombre: usuario.nombre });
+            res.status(200).json({ usuario: usuarioSinClave, token });
+        } catch (error) {
+            next(new AppError('Error al iniciar sesión.', 500));
         }
-        const esValida = await bcrypt.compare(clave, usuario.clave);
-        if (!esValida) {
-            return next(new AppError('Contraseña incorrecta.', 401));
-        }
-        // Opcional: no enviar la clave hasheada al frontend
-        const usuarioSinClave = usuario.toObject();
-        delete usuarioSinClave.clave;
-        res.status(200).json(usuarioSinClave);
-    } catch (error) {
-        next(new AppError('Error al iniciar sesión.', 500));
     }
-}
 }
 
 module.exports = usuarioController;
