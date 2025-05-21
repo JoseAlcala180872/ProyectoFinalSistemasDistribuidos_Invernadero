@@ -71,7 +71,6 @@ sensores.forEach((sensor) => {
             );
             ws.send(JSON.stringify({ type: 'encryptedData', data: datosCifrados.toString('base64') }));
             console.log(`Datos enviados:`, JSON.stringify(sensorData));
-        } else {
             console.log(`Esperando clave pública para el sensor ${sensor.id}...`);
         }
     }, 5000);
