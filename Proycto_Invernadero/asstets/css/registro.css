@@ -1,4 +1,4 @@
-        :root {
+:root {
             --primary-color: #D9D5FF;
             --primary-dark: #B5B0FF;
             --sidebar-color: #D9D5FF;
@@ -50,19 +50,23 @@
         
         .register-container {
             width: 90%;
-            max-width: 450px;
+            max-width: 400px;
             background-color: var(--white);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            padding: 40px 30px;
+            padding: 48px 36px 40px 36px;
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
         }
         
         .logo-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
         
         .logo {
@@ -81,30 +85,36 @@
             fill: var(--white);
         }
         
-        .register-title {
+        .login-title, .register-title {
             text-align: center;
             font-size: 24px;
             font-weight: 600;
             color: var(--text-color);
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+            margin-top: 0;
+            width: 100%;
         }
         
-        .register-subtitle {
+        .login-subtitle {
             text-align: center;
-            font-size: 16px;
             color: #666;
-            margin-top: -20px;
-            margin-bottom: 30px;
+            font-size: 15px;
+            margin-bottom: 18px;
+            margin-top: 0;
+            width: 100%;
         }
         
-        .register-form {
+        .login-form, .register-form {
             display: flex;
             flex-direction: column;
             gap: 18px;
+            align-items: center;
+            width: 100%;
         }
         
         .form-group {
-            position: relative;
+            width: 100%;
+            margin-bottom: 6px;
         }
         
         .form-group label {
@@ -117,6 +127,7 @@
         
         .input-with-icon {
             position: relative;
+            margin-bottom: 2px;
         }
         
         .input-with-icon input {
@@ -127,6 +138,7 @@
             font-size: 16px;
             transition: all 0.3s ease;
             background-color: #F9F9F9;
+            margin-bottom: 2px;
         }
         
         .input-with-icon input:focus {
@@ -146,51 +158,19 @@
             fill: #888;
         }
         
-        .register-button {
-            padding: 15px;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: var(--border-radius);
-            color: var(--text-color);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        .register-button:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-        
-        .register-footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .register-footer a {
-            color: var(--primary-dark);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .register-footer a:hover {
-            text-decoration: underline;
-        }
-        
         .password-requirements {
-            font-size: 12px;
+            font-size: 13px;
             color: #888;
-            margin-top: 4px;
+            margin-bottom: 2px;
+            margin-top: 0;
+            text-align: left;
         }
         
         .error-message {
-            font-size: 12px;
             color: var(--error-color);
-            margin-top: 4px;
+            font-size: 0.9rem;
+            margin-top: 2px;
+            margin-bottom: 0;
             display: none;
         }
         
@@ -198,10 +178,50 @@
             border-color: var(--error-color) !important;
         }
         
+        /* Botón principal igual que login */
+.login-button, .register-button {
+    padding: 15px;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    margin-bottom: 0;
+    align-self: center;
+    width: 100%;
+}
+
+.login-button:hover, .register-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Footer igual que login */
+.login-footer, .register-footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.login-footer a, .register-footer a {
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-footer a:hover, .register-footer a:hover {
+    text-decoration: underline;
+}
+        
         /* Responsive */
         @media (max-width: 480px) {
-            .register-container {
-                padding: 30px 20px;
-                width: 95%;
-            }
-        }
+    .register-container {
+        padding: 24px 8px;
+        width: 98%;
+    }
+}
