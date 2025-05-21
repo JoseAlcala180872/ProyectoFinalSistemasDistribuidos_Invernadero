@@ -1,13 +1,17 @@
 // Servicio para login de usuario por correo
+// Servicio para login de usuario por correo y clave (POST seguro)
 export async function loginUsuario(correo, clave) {
   try {
-    const response = await fetch(`http://localhost:3333/usuarios/${encodeURIComponent(correo)}`);
-    if (!response.ok) throw new Error('Usuario no encontrado');
-    const usuario = await response.json();
-    if (usuario.clave !== clave) {
-      throw new Error('Contraseña incorrecta');
+    const response = await fetch('http://localhost:3333/usuarios/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ correo, clave }),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Error al iniciar sesión');
     }
-    return usuario;
+    return await response.json();
   } catch (error) {
     throw error;
   }

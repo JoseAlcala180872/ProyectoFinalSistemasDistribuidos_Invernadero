@@ -29,34 +29,51 @@
       </div>
     </header>
 
-    <section class="alert-list">
-      <div class="alert">
-        <div class="icon"><i class="fas fa-clock"></i></div>
-        <div class="text">
-          <strong>Alerta 1</strong>
-          <p>Subió la temperatura</p>
-        </div>
-        <div class="power"><i class="fas fa-power-off"></i></div>
-      </div>
-
-      <div class="alert">
-        <div class="icon"><i class="fas fa-clock"></i></div>
-        <div class="text">
-          <strong>Alerta 2</strong>
-          <p>Bajó la temperatura</p>
-        </div>
-        <div class="power"><i class="fas fa-power-off"></i></div>
-      </div>
-
-      <div class="alert">
-        <div class="icon"><i class="fas fa-clock"></i></div>
-        <div class="text">
-          <strong>Alerta 3</strong>
-          <p>Subió la humedad</p>
-        </div>
-        <div class="power"><i class="fas fa-power-off"></i></div>
-      </div>
+    <section class="alert-list" id="alertList">
+      <!-- Las alarmas se llenarán aquí dinámicamente -->
     </section>
   </div>
+  <script type="module">
+    import { obtenerAlarmas } from './servicios/alarmaServicio.js';
+
+    function iconoPorParametro(parametro) {
+      return parametro === 'temperatura' ? 'fa-temperature-high' : 'fa-tint';
+    }
+
+    function textoPorTipo(tipo, parametro) {
+      if (tipo === 'alta') return `Subió la ${parametro}`;
+      if (tipo === 'baja') return `Bajó la ${parametro}`;
+      return `Alarma de ${parametro}`;
+    }
+
+    async function mostrarAlarmas() {
+      const contenedor = document.getElementById('alertList');
+      contenedor.innerHTML = '';
+      try {
+        const alarmas = await obtenerAlarmas();
+        if (alarmas.length === 0) {
+          contenedor.innerHTML = '<div>No hay alarmas activas.</div>';
+          return;
+        }
+        alarmas.forEach(a => {
+          const div = document.createElement('div');
+          div.className = 'alert';
+          div.innerHTML = `
+            <div class="icon"><i class="fas ${iconoPorParametro(a.parametro)}"></i></div>
+            <div class="text">
+              <strong>${a.tipo.charAt(0).toUpperCase() + a.tipo.slice(1)} (${a.parametro})</strong>
+              <p>${textoPorTipo(a.tipo, a.parametro)} (umbral: ${a.umbral})</p>
+            </div>
+            <div class="power"><i class="fas fa-power-off"></i></div>
+          `;
+          contenedor.appendChild(div);
+        });
+      } catch (e) {
+        contenedor.innerHTML = '<div>Error al cargar alarmas</div>';
+      }
+    }
+
+    mostrarAlarmas();
+  </script>
 </body>
 </html>
