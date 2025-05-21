@@ -59,7 +59,7 @@ class datoController {
     static async obtenerDatosPorLapso(req, res, next) {
         try {
             const { inicio, fin } = req.query;
-
+            console.log(inicio + 'inicio y fin');
             if (!inicio || !fin) {
                 return next(new AppError('Debes proporcionar las fechas inicio y fin.', 400));
             }
