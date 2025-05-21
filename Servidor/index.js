@@ -1,131 +1,137 @@
-const WebSocket = require('ws');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const express = require('express');
+const cors = require('cors');
+const amqp = require('amqplib');
 const db = require('./config/db');
 const DatoDAO = require('./dataAccess/DatoDAO');
 const AlarmaDAO = require('./dataAccess/AlarmaDAO');
 const Notificacion = require('./utils/notificacion');
-//const UsuarioDAO = require('./dataAccess/UsuarioDAO');
-const amqp = require('amqplib');
-const express = require('express');
+const { globalErrorHandler } = require('./utils/appError');
+const { verifyToken } = require('./utils/jwt'); // JWT middleware
+
 const app = express();
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Ignorar certificados TLS (no recomendado en producción)
 
+// Middleware general
 app.use(express.json());
-
-const cors = require('cors');
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+// Rutas públicas
+const usuarioRouter = require('./routes/usuarioRouter'); // Registro/login sin JWT
+app.use('/usuarios', usuarioRouter);
+
+// Rutas protegidas (requieren JWT)
 const sensorRouter = require('./routes/sensorRoute');
 const datoRouter = require('./routes/datoRouter');
-const usuarioRouter = require('./routes/usuarioRouter');
 const alarmaRouter = require('./routes/alarmaRouter');
-app.use('/datos', datoRouter);
-app.use('/usuarios', usuarioRouter);
-app.use('/sensores', sensorRouter);
-app.use('/alarmas', alarmaRouter);
 
+// Protección JWT para estas rutas
+app.use('/datos', verifyToken, datoRouter);
+app.use('/sensores', verifyToken, sensorRouter);
+app.use('/alarmas', verifyToken, alarmaRouter);
+
+// Ruta pública para verificar el estado de la API
+app.get('/api/estado', (req, res) => {
+    res.status(200).json({
+        status: 'success',
+        message: 'API en funcionamiento',
+        timestamp: new Date()
+    });
+});
+
+// Ruta no encontrada
+app.all('*', (req, res, next) => {
+    const err = new Error(`Ruta ${req.originalUrl} no encontrada`);
+    err.statusCode = 404;
+    err.status = 'fail';
+    next(err);
+});
+
+// Middleware global de errores
+app.use(globalErrorHandler);
+
+// Inicialización del servidor
 const PORT = process.env.PORT || 3333;
-
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Servidor Express escuchando en el puerto ${PORT}`);
 });
 
-
-
-/*
-const wss = new WebSocket.Server({ port: 4000 });
-
-wss.on('connection', (ws) => {
-    console.log('Conexión establecida con el gateway.');
-
-    ws.on('message', async (message) => {
-        try {
-            const sensorData = JSON.parse(message);
-            console.log('Datos recibidos del gateway:', sensorData);
-
-            // Guardar los datos en la base de datos
-            await DatoDAO.crearDato(sensorData).then(datoGuardado => {
-                console.log('Dato guardado en la base de datos:', datoGuardado);
-            }).catch(error => {
-                console.error('Error al guardar el dato:', error);
-            });
-        } catch (error) {
-            console.error('Error al procesar los datos recibidos:', error.message);
-        }
-    });
-
-    ws.on('close', () => {
-        console.log('Conexión cerrada con el gateway.');
-    });
-});
-
-wss.on('listening', () => {
-    console.log('Servidor escuchando en el puerto 4000.');
-});
-
-wss.on('error', (err) => {
-    console.error('Error del servidor WebSocket:', err.message);
-});*/
-
+// Consumo de mensajes desde RabbitMQ
 async function consumirRabbitMQ() {
-    //aqui va la contraseña y el usuario para rabbitmq
-    // ejemplo: amqp://usuario:contraseña@localhost'
-    const conexion = await amqp.connect('amqp://guest:guest@localhost');
-    const canal = await conexion.createChannel();
-    await canal.assertQueue('datos_sensores');
-    canal.consume('datos_sensores', async (msg) => {
-        if (msg !== null) {
-            try {
-                const sensorData = JSON.parse(msg.content.toString());
+    try {
+        const conexion = await amqp.connect(process.env.RABBITMQ_URL || 'amqp://ruzzky:FVCM2505@localhost');
+        const canal = await conexion.createChannel();
+        await canal.assertQueue('datos_sensores');
+        console.log('Conectado a RabbitMQ, esperando mensajes...');
 
-                const alarmas = await AlarmaDAO.obtenerTodasLasAlarmas();
+        canal.consume('datos_sensores', async (msg) => {
+            if (msg !== null) {
+                try {
+                    const sensorData = JSON.parse(msg.content.toString());
+                    console.log('Datos recibidos de RabbitMQ:', sensorData);
 
-                for (const alarma of alarmas) {
-                    if (
-                        (alarma.parametro === "temperatura" && sensorData.temperatura >= alarma.umbral) ||
-                        (alarma.parametro === "humedad" && sensorData.humedad >= alarma.umbral)
-                    ) {
-                        if (!alarma.estado) {
-                            await AlarmaDAO.activarAlarma(alarma.id);
-                            await Notificacion.enviarCorreo(
-                                alarma.correoNotificacion,
-                                `⚠️ Alarma activada: ${alarma.tipo}\nTemperatura actual: ${sensorData.temperatura}°C`
-                            );
+                    const alarmas = await AlarmaDAO.obtenerTodasLasAlarmas();
+
+                    for (const alarma of alarmas) {
+                        if (
+                            (alarma.parametro === "temperatura" && sensorData.temperatura >= alarma.umbral) ||
+                            (alarma.parametro === "humedad" && sensorData.humedad >= alarma.umbral)
+                        ) {
+                            if (!alarma.estado) {
+                                await AlarmaDAO.activarAlarma(alarma.id);
+                                await Notificacion.enviarCorreo(
+                                    alarma.correoNotificacion,
+                                    `⚠️ Alarma activada: ${alarma.tipo}\nTemperatura actual: ${sensorData.temperatura}°C`
+                                );
+                            }
                         }
                     }
+
+                    await DatoDAO.crearDato(sensorData);
+                    canal.ack(msg);
+                } catch (error) {
+                    console.error('Error al procesar el mensaje de RabbitMQ:', error.message);
+                    canal.nack(msg, false, false); // descarta el mensaje si hay error
                 }
-                // Guardar los datos en la base de datos
-                await DatoDAO.crearDato(sensorData).then(datoGuardado => {
-                    console.log('Dato guardado en la base de datos:', datoGuardado);
-                }).catch(error => {
-                    console.error('Error al guardar el dato:', error);
-                });
-                canal.ack(msg);
-            } catch (error) {
-                console.error('Error al procesar los datos recibidos:', error.message);
-                canal.nack(msg, false, false); // descarta el mensaje si hay error
             }
-        }
-    });
-    console.log('Servidor consumiendo mensajes de RabbitMQ');
+        });
+
+        // Manejo de reconexión
+        conexion.on('error', (err) => {
+            console.error('Error de conexión RabbitMQ:', err.message);
+            setTimeout(consumirRabbitMQ, 5000);
+        });
+
+        conexion.on('close', () => {
+            console.warn('Conexión RabbitMQ cerrada. Reintentando...');
+            setTimeout(consumirRabbitMQ, 5000);
+        });
+
+    } catch (error) {
+        console.error('Error al conectar con RabbitMQ:', error.message);
+        setTimeout(consumirRabbitMQ, 5000);
+    }
 }
 
+// Punto de entrada
 async function main() {
-    //Conexion establecida.
-    await db.conectar().then(() => {
-        console.log('Conexión establecida con éxito');
-    }).catch(error => {
-        console.error('Error al conectar a la base de datos:', error);
-    });
-
-    consumirRabbitMQ();
-    /*UsuarioDAO.crearUsuario({
-  "nombre": "Juan",
-  "correo": "juan@ejemplo.com",
-  "clave": "123456"
-    }).then(usuarioGuardado => {
-        console.log('Usuario guardado en la base de datos:', usuarioGuardado);
-    }).catch(error => {
-        console.error('Error al guardar el usuario:', error);
-    });*/
+    try {
+        await db.conectar();
+        console.log('Conexión a MongoDB establecida con éxito');
+        consumirRabbitMQ();
+    } catch (error) {
+        console.error('Error en la inicialización:', error);
+        process.exit(1);
+    }
 }
 
+// Iniciar
 main();
+
+// Cierre limpio
+process.on('SIGTERM', () => {
+    console.log('SIGTERM recibido. Cerrando servidor...');
+    server.close(() => {
+        console.log('Servidor Express cerrado.');
+    });
+});
