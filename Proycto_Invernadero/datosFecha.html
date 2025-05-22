@@ -30,35 +30,30 @@
         <h1 class="title">Datos por fecha</h1>
         
         <div class="calendar-interval">
-            <div class="calendar-icon" id="calendarIcon" style="cursor:pointer;">
+            <div class="calendar-icon" id="calendarIcon" title="Seleccionar intervalo de fechas">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/>
                     <path d="M4 8h16v13H4z" opacity=".3"/>
                 </svg>
             </div>
-            <div id="dateFields" style="display:none; margin-top:10px;">
+            <form id="dateFields" style="display:none; margin-top:0; align-items:center;">
                 <label for="fechaInicio">Desde:</label>
-                <input type="date" id="fechaInicio" name="fechaInicio">
+                <input type="date" id="fechaInicio" name="fechaInicio" required>
                 <label for="fechaFin">Hasta:</label>
-                <input type="date" id="fechaFin" name="fechaFin">
-                <button id="buscarFechas" style="margin-left:10px;">Buscar</button>
-            </div>
+                <input type="date" id="fechaFin" name="fechaFin" required>
+                <button type="button" id="buscarFechas">Buscar</button>
+            </form>
         </div>
         <script>
             document.getElementById('calendarIcon').addEventListener('click', function() {
                 var dateFields = document.getElementById('dateFields');
-                dateFields.style.display = dateFields.style.display === 'none' ? 'block' : 'none';
+                dateFields.style.display = dateFields.style.display === 'none' ? 'flex' : 'none';
             });
         </script>
         
         <div id="error-fechas" style="display:none;color:white;background:#e74c3c;padding:10px;margin:10px 0;border-radius:5px;text-align:center;"></div>
         
         <div class="chart-container">
-            <div class="chart-header">
-                <div class="chart-title">Datos por fecha</div>
-                <div class="chart-date">12/07/2023</div>
-            </div>
-            
             <table class="datos-tabla">
                 <thead>
                     <tr>

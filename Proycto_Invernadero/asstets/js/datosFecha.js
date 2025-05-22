@@ -1,4 +1,4 @@
-import { obtenerDatosPorIntervalo } from '../servicios/datosServicio.js';
+import { obtenerDatosPorIntervalo } from '../../servicios/datosServicio.js';
 
 function mostrarError(mensaje) {
     let errorDiv = document.getElementById('error-fechas');
@@ -48,6 +48,7 @@ const buscarFechasBtn = document.getElementById('buscarFechas');
 
 buscarFechasBtn.addEventListener('click', async function() {
     ocultarError();
+    console.log("si entra")
     if (!fechaInicio.value || !fechaFin.value) {
         mostrarError('Debes seleccionar ambas fechas para buscar.');
         renderizarTabla([]);
