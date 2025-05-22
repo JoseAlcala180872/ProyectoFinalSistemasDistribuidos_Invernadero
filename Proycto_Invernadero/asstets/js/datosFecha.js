@@ -1,11 +1,11 @@
-import { obtenerDatosPorIntervalo } from '../servicios/datosServicio.js';
+import { obtenerDatosPorIntervalo } from '../../servicios/datosServicio.js';
 
 function mostrarError(mensaje) {
     let errorDiv = document.getElementById('error-fechas');
     if (!errorDiv) {
         errorDiv = document.createElement('div');
         errorDiv.id = 'error-fechas';
-        errorDiv.style.color = 'white';
+        errorDiv.style.color = 'red';
         errorDiv.style.background = '#e74c3c';
         errorDiv.style.padding = '10px';
         errorDiv.style.margin = '10px 0';
@@ -46,19 +46,33 @@ const fechaInicio = document.getElementById('fechaInicio');
 const fechaFin = document.getElementById('fechaFin');
 const buscarFechasBtn = document.getElementById('buscarFechas');
 
-buscarFechasBtn.addEventListener('click', async function() {
-    ocultarError();
-    if (!fechaInicio.value || !fechaFin.value) {
-        mostrarError('Debes seleccionar ambas fechas para buscar.');
-        renderizarTabla([]);
-        return;
-    }
-    try {
-        const datos = await obtenerDatosPorIntervalo(fechaInicio.value, fechaFin.value);
-        renderizarTabla(datos);
+if (buscarFechasBtn) {
+    buscarFechasBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
         ocultarError();
-    } catch (e) {
-        mostrarError(e.message || 'Error al obtener los datos.');
-        renderizarTabla([]);
-    }
+        if (!fechaInicio.value || !fechaFin.value) {
+            mostrarError('Debes seleccionar ambas fechas para buscar.');
+            renderizarTabla([]);
+            return;
+        }
+        try {
+            const datos = await obtenerDatosPorIntervalo(fechaInicio.value, fechaFin.value);
+            renderizarTabla(datos);
+            ocultarError();
+        } catch (e) {
+            mostrarError(e.message || 'Error al obtener los datos.');
+            renderizarTabla([]);
+        }
+    });
+} else {
+    console.error('No se encontró el botón buscarFechas en el DOM');
+}
+
+// Mostrar datos de ejemplo al cargar la página
+window.addEventListener('DOMContentLoaded', function() {
+    renderizarTabla([
+        { _id: '2025-05-20', promedioHumedad: 60.5, promedioTemperatura: 22.3 },
+        { _id: '2025-05-21', promedioHumedad: 62.1, promedioTemperatura: 23.0 },
+        { _id: '2025-05-22', promedioHumedad: 59.8, promedioTemperatura: 21.7 }
+    ]);
 });

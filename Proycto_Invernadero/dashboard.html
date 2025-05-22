@@ -5,13 +5,404 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Invernadero - Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="asstets/css/dashboard-estilos.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 80px;
+            background: #667eea;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            margin: 10px auto;
+            border-radius: 15px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .sidebar-icon:hover {
+            background: #fff;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .sidebar-icon.active {
+            background: #fff;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .weather-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .weather-icon {
+            color: #f39c12;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stat-time {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .stat-note {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .history-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .history-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .chart-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .grid-line {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .grid-line::before {
+            content: attr(data-value);
+            position: absolute;
+            left: -40px;
+            top: -8px;
+            color: #666;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .data-graph {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 10px;
+            opacity: 0.8;
+            clip-path: polygon(0% 80%, 20% 60%, 40% 70%, 60% 40%, 80% 50%, 100% 30%, 100% 100%, 0% 100%);
+            transition: opacity 0.3s ease;
+        }
+
+        .data-graph:hover {
+            opacity: 1;
+        }
+
+        .temp-values {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .temp-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .temp-point::after {
+            content: attr(data-temp);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .hourly-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .hourly-chart {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .hourly-chart h2 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .chart-hourly {
+            position: relative;
+            height: 120px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .hourly-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .hourly-grid-line {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .data-point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .data-point:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .data-point:nth-child(2) { left: 16.67%; }
+        .data-point:nth-child(3) { left: 33.33%; }
+        .data-point:nth-child(4) { left: 50%; }
+        .data-point:nth-child(5) { left: 66.67%; }
+        .data-point:nth-child(6) { left: 83.33%; }
+        .data-point:nth-child(7) { left: 100%; }
+
+        .time-markers {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .time-marker {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #667eea;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .navbar {
+                padding: 15px 20px;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+            
+            .hourly-charts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Barra lateral -->
     <nav class="sidebar">
-        <a href="dashboard.html" class="sidebar-icon" title="Dashboard">
+        <a href="dashboard.html" class="sidebar-icon active" title="Dashboard">
             <i class="fas fa-home"></i>
         </a>
         <a href="sensores.html" class="sidebar-icon" title="Sensores">
@@ -62,11 +453,18 @@
             <div class="history-subtitle">En la última temporada</div>
             <div class="chart-container">
                 <div class="chart-grid">
-                    <div class="grid-line"></div>
-                    <div class="grid-line"></div>
-                    <div class="grid-line"></div>
+                    <div class="grid-line" data-value="50°C"></div>
+                    <div class="grid-line" data-value="25°C"></div>
+                    <div class="grid-line" data-value="0°C"></div>
                 </div>
                 <div class="data-graph"></div>
+                <div class="temp-values">
+                    <div class="temp-point" data-temp="15°C" style="left: 16.67%; top: 70%;"></div>
+                    <div class="temp-point" data-temp="22°C" style="left: 33.33%; top: 50%;"></div>
+                    <div class="temp-point" data-temp="18°C" style="left: 50%; top: 60%;"></div>
+                    <div class="temp-point" data-temp="28°C" style="left: 66.67%; top: 35%;"></div>
+                    <div class="temp-point" data-temp="25°C" style="left: 83.33%; top: 45%;"></div>
+                </div>
             </div>
         </div>
         
@@ -79,17 +477,17 @@
                         <div class="hourly-grid-line"></div>
                         <div class="hourly-grid-line"></div>
                     </div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
+                    <div class="data-point" title="18°C" style="top: 60%;"></div>
+                    <div class="data-point" title="22°C" style="top: 40%;"></div>
+                    <div class="data-point" title="25°C" style="top: 30%;"></div>
+                    <div class="data-point" title="28°C" style="top: 20%;"></div>
+                    <div class="data-point" title="26°C" style="top: 25%;"></div>
+                    <div class="data-point" title="24°C" style="top: 35%;"></div>
                 </div>
                 <div class="time-markers">
                     <span class="time-marker">10AM</span>
                     <span class="time-marker">11AM</span>
-                    <span class="time-marker">12AM</span>
+                    <span class="time-marker">12PM</span>
                     <span class="time-marker">01PM</span>
                     <span class="time-marker">02PM</span>
                     <span class="time-marker">03PM</span>
@@ -104,17 +502,17 @@
                         <div class="hourly-grid-line"></div>
                         <div class="hourly-grid-line"></div>
                     </div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
-                    <div class="data-point"></div>
+                    <div class="data-point" title="65%" style="top: 35%;"></div>
+                    <div class="data-point" title="70%" style="top: 30%;"></div>
+                    <div class="data-point" title="68%" style="top: 32%;"></div>
+                    <div class="data-point" title="72%" style="top: 28%;"></div>
+                    <div class="data-point" title="75%" style="top: 25%;"></div>
+                    <div class="data-point" title="73%" style="top: 27%;"></div>
                 </div>
                 <div class="time-markers">
                     <span class="time-marker">10AM</span>
                     <span class="time-marker">11AM</span>
-                    <span class="time-marker">12AM</span>
+                    <span class="time-marker">12PM</span>
                     <span class="time-marker">01PM</span>
                     <span class="time-marker">02PM</span>
                     <span class="time-marker">03PM</span>
@@ -130,15 +528,36 @@
     </div>
 
     <script type="module">
-        import { obtenerUltimosDatos } from './servicios/datosServicio.js';
-        import { obtenerDatosPorHora } from './servicios/datosPorHoraServicio.js';
+        // Simulación de servicios (reemplaza con tus imports reales)
+        const obtenerUltimosDatos = async () => {
+            // Simulación de datos - reemplaza con tu servicio real
+            return [
+                {temperatura: 15, humedad: 65, fechaHora: new Date().toISOString()},
+                {temperatura: 22, humedad: 70, fechaHora: new Date().toISOString()},
+                {temperatura: 18, humedad: 68, fechaHora: new Date().toISOString()},
+                {temperatura: 28, humedad: 72, fechaHora: new Date().toISOString()},
+                {temperatura: 25, humedad: 75, fechaHora: new Date().toISOString()}
+            ];
+        };
+
+        const obtenerDatosPorHora = async () => {
+            // Simulación de datos por hora - reemplaza con tu servicio real
+            return [
+                {_id: 10, promedioTemperatura: 18, promedioHumedad: 65},
+                {_id: 11, promedioTemperatura: 22, promedioHumedad: 70},
+                {_id: 12, promedioTemperatura: 25, promedioHumedad: 68},
+                {_id: 13, promedioTemperatura: 28, promedioHumedad: 72},
+                {_id: 14, promedioTemperatura: 26, promedioHumedad: 75},
+                {_id: 15, promedioTemperatura: 24, promedioHumedad: 73}
+            ];
+        };
+
         // Actualiza los valores de temperatura y humedad en el dashboard
         async function actualizarDashboard() {
             try {
                 const datos = await obtenerUltimosDatos();
                 if (datos && datos.length > 0) {
                     const ultimo = datos[datos.length - 1];
-                    // Cambia ambos valores cada vez
                     document.querySelectorAll('.stat-card .stat-value')[0].textContent = `${ultimo.temperatura}°`;
                     document.querySelectorAll('.stat-card .stat-value')[1].textContent = `${ultimo.humedad}%`;
                     document.querySelector('.stat-time').textContent = new Date(ultimo.fechaHora).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -147,42 +566,64 @@
                 console.error('Error al actualizar dashboard:', error);
             }
         }
+
+        // Actualiza la gráfica histórica con valores dinámicos
+        async function actualizarGraficaHistorica() {
+            try {
+                const datos = await obtenerUltimosDatos();
+                const tempPoints = document.querySelectorAll('.temp-point');
+                const maxTemp = 50; // Temperatura máxima para la escala
+                
+                datos.forEach((dato, index) => {
+                    if (tempPoints[index]) {
+                        const tempPercent = 100 - (dato.temperatura / maxTemp) * 100;
+                        tempPoints[index].style.top = `${Math.max(10, Math.min(90, tempPercent))}%`;
+                        tempPoints[index].setAttribute('data-temp', `${dato.temperatura}°C`);
+                    }
+                });
+            } catch (error) {
+                console.error('Error al actualizar gráfica histórica:', error);
+            }
+        }
+
+        // Actualiza las gráficas por hora
         async function actualizarGraficasPorHora() {
             try {
                 const datos = await obtenerDatosPorHora();
-                // Horas que se muestran en la gráfica (ajusta según tus labels)
                 const horas = [10, 11, 12, 13, 14, 15];
                 const tempChart = document.querySelectorAll('.hourly-chart')[0].querySelectorAll('.data-point');
                 const humChart = document.querySelectorAll('.hourly-chart')[1].querySelectorAll('.data-point');
-                // Escala máxima para la gráfica
-                const maxTemp = 50; // Máxima temperatura esperada
-                const maxHum = 100; // Máxima humedad esperada
+                
+                const maxTemp = 50;
+                const maxHum = 100;
 
                 horas.forEach((hora, idx) => {
                     const dato = datos.find(d => d._id === hora);
-                    if (dato) {
-                        // Calcula el porcentaje invertido (0% arriba, 100% abajo)
+                    if (dato && tempChart[idx] && humChart[idx]) {
                         const tempPercent = 100 - (dato.promedioTemperatura / maxTemp) * 100;
                         const humPercent = 100 - (dato.promedioHumedad / maxHum) * 100;
-                        tempChart[idx].style.top = `${tempPercent}%`;
+                        
+                        tempChart[idx].style.top = `${Math.max(10, Math.min(90, tempPercent))}%`;
                         tempChart[idx].title = `${dato.promedioTemperatura.toFixed(1)}°C`;
-                        humChart[idx].style.top = `${humPercent}%`;
+                        
+                        humChart[idx].style.top = `${Math.max(10, Math.min(90, humPercent))}%`;
                         humChart[idx].title = `${dato.promedioHumedad.toFixed(1)}%`;
-                    } else {
-                        tempChart[idx].style.top = '100%';
-                        tempChart[idx].title = 'Sin datos';
-                        humChart[idx].style.top = '100%';
-                        humChart[idx].title = 'Sin datos';
                     }
                 });
             } catch (error) {
                 console.error('Error al actualizar gráficas por hora:', error);
             }
         }
+
+        // Inicializar dashboard
         actualizarDashboard();
+        actualizarGraficaHistorica();
         actualizarGraficasPorHora();
+
+        // Actualizar cada 5 segundos
         setInterval(() => {
             actualizarDashboard();
+            actualizarGraficaHistorica();
             actualizarGraficasPorHora();
         }, 5000);
     </script>
